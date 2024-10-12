@@ -22,7 +22,7 @@ router.post('/', upload.single('profileImage'), async (req, res) => {
   try {
     const { title, firstName, lastName, birthDate } = req.body;
     const age = calculateAge(birthDate);
-    const profileImage = req.file.path; // path ของภาพที่อัปโหลด
+    const profileImage = req.file.path; 
 
     const newMember = new Member({ title, firstName, lastName, birthDate, age, profileImage });
     await newMember.save();

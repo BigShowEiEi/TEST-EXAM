@@ -5,7 +5,7 @@ const memberSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   birthDate: { type: Date, required: true },
-  age: { type: Number, required: true }, // คำนวณอัตโนมัติ
+  age: { type: Number, required: true }, 
   profileImage: { type: String, required: true },
   updatedAt: { type: Date, default: Date.now }
 });
