@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+</head>
+<body>
+
+    <a href="/add-member" style="text-decoration: none;">
+        <button>เพิ่มสมาชิกใหม่</button>
+    </a>
+    <h2>รายชื่อสมาชิก</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>คำนำหน้าชื่อ</th>
+                <th>ชื่อ</th>
+                <th>นามสกุล</th>
+                <th>วันเดือนปีเกิด</th>
+                <th>อายุ</th>
+                <th>รูปภาพโปรไฟล์</th>
+                <th>การจัดการ</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (members && members.length > 0) { %>
+                <% members.forEach(member => { %>
+                    <tr>
+                        <td><%= member.title %></td>
+                        <td><%= member.firstName %></td>
+                        <td><%= member.lastName %></td>
+                        <td>
+                            <% if (member.birthDate) { %>
+                                <%= new Date(member.birthDate).toLocaleDateString('th-TH') %>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if (member.birthDate) { %>
+                                <%= new Date().getFullYear() - new Date(member.birthDate).getFullYear() %>
+                            <% } else { %>
+                                N/A
+                            <% } %>
+                        </td>
+                        <td><img src="<%= member.profileImage %>" alt="Profile" style="width: 100px; height: 100px;"></td>
+                        <td>
+                            <button onclick="deleteMember('<%= member._id %>')">ลบ</button>
+                        </td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="7">ไม่มีข้อมูลสมาชิก</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <script>
+        function deleteMember(memberId) {
+            if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกนี้?')) {
+                fetch(`/api/members/delete/${memberId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.message === 'Member deleted successfully') {
+                        alert('ลบสมาชิกเรียบร้อยแล้ว');
+                        window.location.reload(); // โหลดหน้าใหม่หลังลบสำเร็จ
+                    } else {
+                        alert('เกิดข้อผิดพลาด');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+            }
+        }
+    </script>
+</body>
+</html>
